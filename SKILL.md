@@ -28,7 +28,7 @@ Add to your agent's config (OpenCode: `opencode.jsonc`, Claude: `claude_desktop_
 |------|-------|
 | `paper_search` | Search arXiv with filters (category, date, author, title). `check_local=true` marks already-downloaded papers. |
 | `paper_download` | Download PDF + auto-classify by primary category. Creates `.pdf`, bilingual `.md`, `.meta.json`. |
-| `paper_classify` | AI-driven subcategory assignment. Openai view mode first → AI reads abstract and decides → execute mode moves files. |
+| `paper_classify` | AI-driven subcategory assignment. View mode returns abstract + existing subcategories in the library for naming consistency, then AI decides and executes the move. |
 | `paper_list` | Browse library. Filter by category, subcategory, or status. |
 | `paper_translate` | AI translates English abstract to Chinese, saves to `.md` and `.meta.json`. |
 
@@ -38,7 +38,8 @@ Add to your agent's config (OpenCode: `opencode.jsonc`, Claude: `claude_desktop_
 1. Search  → paper_search(query, check_local=true)
 2. Select  → AI reads abstracts, picks papers, skips in_library
 3. Download → paper_download (or parallel task subagents for batch)
-4. Classify → paper_classify(id) view → AI decides → paper_classify(id, subcategory)
+4. Classify → paper_classify(id) view (now includes existing_subcategories list for naming consistency)
+              → AI decides → paper_classify(id, subcategory)
 5. Verify  → paper_list(status="待分类")
 6. Translate → paper_translate(id, chinese_abstract) (parallel task subagents for batch)
 7. Read    → read .md for bilingual summary / read .pdf for full paper

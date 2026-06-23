@@ -12,7 +12,7 @@
 |------|-------------|
 | `paper_search` | Search arXiv with filters (category, date, author, title). `check_local=true` marks already-downloaded papers. |
 | `paper_download` | Download PDF + auto-classify by primary category. Creates `.pdf` (titled), `.md` (bilingual summary), `.meta.json`. |
-| `paper_classify` | AI-driven subcategory assignment. Agent reads abstract → decides subcategory → tool moves files into `category/subcategory/`. |
+| `paper_classify` | AI-driven subcategory assignment. View mode returns abstract + existing subcategories in the library, so the AI maintains naming consistency. Then AI executes the move into `category/subcategory/`. |
 | `paper_list` | Browse library. Filter by category, subcategory, or classification status. |
 | `paper_translate` | AI translates English abstracts to Chinese. Saves bilingual `.md` and `.meta.json`. |
 

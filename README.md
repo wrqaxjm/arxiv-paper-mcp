@@ -12,7 +12,7 @@
 |------|------|
 | `paper_search` | 搜索 arXiv 论文，支持分类、日期、作者、标题过滤。`check_local=true` 标记已下载的论文。 |
 | `paper_download` | 下载 PDF + 自动按主分类归档。创建三个文件：`.pdf`（题名命名）、`.md`（双语摘要 + 笔记区）、`.meta.json`（机器可读元数据）。 |
-| `paper_classify` | AI 驱动的细分类。Agent 先读摘要 → 决定子分类 → 工具将文件移动到 `主分类/子分类/` 目录。 |
+| `paper_classify` | AI 驱动的细分类。查看模式返回论文摘要 + **库里已有子分类列表**，AI 保持命名一致性后执行归类。 / View mode returns abstract + existing subcategories for naming consistency, then AI executes the move. |
 | `paper_list` | 浏览本地论文库，支持按分类、子分类或状态过滤。 |
 | `paper_translate` | AI 将英文摘要翻译为中文，保存双语 `.md` 和 `.meta.json`。 |
 

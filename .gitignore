@@ -1,0 +1,5 @@
+node_modules
+papers
+*.pdf
+*.tmp
+.DS_Store

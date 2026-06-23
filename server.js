@@ -413,6 +413,22 @@ async function toolClassify(args) {
 
   // ── View mode: return metadata for AI to read and decide ──
   if (!args.subcategory) {
+    // Gather existing subcategories for naming consistency
+    const allPaperMeta = await scanMetaFiles()
+    const existingSubs = {}
+    for (const m of allPaperMeta) {
+      const cat = m.category || "unknown"
+      const sub = m.subcategory
+      if (sub) {
+        if (!existingSubs[cat]) existingSubs[cat] = []
+        if (!existingSubs[cat].includes(sub)) existingSubs[cat].push(sub)
+      }
+    }
+    // Sort alphabetically
+    for (const cat of Object.keys(existingSubs)) {
+      existingSubs[cat].sort()
+    }
+
     return {
       arxiv_id: meta.arxiv_id,
       title: meta.title || "(unknown)",
@@ -422,7 +438,8 @@ async function toolClassify(args) {
       category: meta.category,
       current_subcategory: meta.subcategory || "(none)",
       current_path: path.dirname(meta._meta_path),
-      hint: "Read the abstract above, then call paper_classify again with a subcategory to move this paper."
+      existing_subcategories: existingSubs,
+      hint: "Above is the abstract. existing_subcategories lists ALL subcategories currently in the library (grouped by main category). Match existing naming conventions where possible, or create a new subcategory if none fit. Then call paper_classify again with your chosen subcategory."
     }
   }
 

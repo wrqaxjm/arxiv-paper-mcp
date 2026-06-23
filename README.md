@@ -1,34 +1,40 @@
 # ArXiv Paper MCP
 
-A zero-dependency Node.js MCP server for managing your arXiv paper library. Search, download, classify, and translate academic papers — all through natural language via your AI coding agent (OpenCode, Claude Code, etc.).
+> 一个零依赖、纯 Node.js 的 MCP 服务器，用于管理你的 arXiv 论文库。通过自然语言搜索、下载、分类和翻译学术论文。
 
-## Features
+> A zero-dependency Node.js MCP server for managing your arXiv paper library. Search, download, classify, and translate academic papers — all through natural language.
 
-| Tool | Description |
-|------|-------------|
-| `paper_search` | Search arXiv with filters (category, date, author, title). Supports `check_local` to mark already-downloaded papers. |
-| `paper_download` | Download PDF + auto-classify by arXiv primary category. Creates three files: `.pdf` (titled by paper name), `.md` (bilingual summary), `.meta.json` (machine-readable metadata). |
-| `paper_classify` | AI-driven subcategory assignment. Agent reads the abstract → decides a subcategory → tool moves files into `category/subcategory/` folders. |
-| `paper_list` | Browse your local library. Filter by category, subcategory, or classification status. |
-| `paper_translate` | AI translates English abstracts to Chinese. Saves bilingual summaries in `.md` and `.meta.json`. |
+---
 
-## Quick Start
+## 功能 / Features
 
-### Prerequisites
-- Node.js 18+ (built-in `fetch` required)
-- An MCP-compatible agent (OpenCode, Claude Code, etc.)
+| 工具 Tool | 说明 Description |
+|-----------|-----------------|
+| `paper_search` | 搜索 arXiv 论文，支持分类、日期、作者、标题过滤。`check_local=true` 标记已下载的论文。 / Search arXiv with filters. `check_local=true` marks already-downloaded papers. |
+| `paper_download` | 下载 PDF + 自动按主分类归档。创建三个文件：`.pdf`（题名命名）、`.md`（双语摘要 + 笔记区）、`.meta.json`（机器可读元数据）。/ Download PDF + auto-classify. Creates `.pdf` (titled), `.md` (bilingual summary), `.meta.json`. |
+| `paper_classify` | AI 驱动的细分类。Agent 先读摘要 → 决定子分类 → 工具将文件移动到 `主分类/子分类/` 目录。 / AI-driven subcategory assignment: agent reads abstract → decides subcategory → tool moves files. |
+| `paper_list` | 浏览本地论文库，支持按分类、子分类或状态过滤。 / Browse library with category/subcategory/status filters. |
+| `paper_translate` | AI 将英文摘要翻译为中文，保存双语 `.md` 和 `.meta.json`。 / AI translates English abstracts to Chinese. |
 
-### Installation
+## 快速开始 / Quick Start
+
+### 前置要求 / Prerequisites
+
+- Node.js 18+（需要内置 `fetch`）/ Node.js 18+ (built-in `fetch` required)
+- 支持 MCP 的 AI Agent（OpenCode、Claude Code 等）/ An MCP-compatible agent
+
+### 安装 / Installation
 
 ```bash
-# Clone
-git clone https://github.com/YOUR_USERNAME/arxiv-paper-mcp.git
+git clone https://github.com/wrqaxjm/arxiv-paper-mcp.git
 cd arxiv-paper-mcp
 ```
 
-### Configuration
+**零依赖，不需要 `npm install`。** / **Zero dependencies. No `npm install` needed.**
 
-Set the paper storage directory via environment variable (defaults to `./papers`):
+### 配置 / Configuration
+
+通过环境变量设置论文存储目录（默认为 `./papers`）：/ Set storage path via env var (defaults to `./papers`):
 
 ```bash
 export ARXIV_PAPER_STORAGE=/path/to/your/library
@@ -36,7 +42,7 @@ export ARXIV_PAPER_STORAGE=/path/to/your/library
 
 #### OpenCode
 
-Add to `opencode.jsonc`:
+在 `opencode.jsonc` 中添加：/ Add to `opencode.jsonc`:
 
 ```jsonc
 {
@@ -70,28 +76,37 @@ Add to `opencode.jsonc`:
 }
 ```
 
-## Usage
+## 使用方法 / Usage
 
-Load the `arxiv-research` skill in your agent, or describe your task naturally:
+在你的 Agent 中加载 `SKILL.md`，或直接用自然语言描述任务：/ Load the skill or describe tasks naturally:
 
-> "Search for the latest papers on visual SLAM from arXiv, download the top 5, and classify them by topic."
+> "帮我搜索 arXiv 上关于 visual SLAM 的最新论文，下载前 5 篇，按主题分类。"
+> "Search arXiv for the latest papers on visual SLAM, download the top 5, and classify them by topic."
 
-### Workflow
+### 工作流 / Workflow
 
 ```
-search → read abstracts → download → AI-driven classify → list → translate → read
+搜索 search → 读摘要筛选 select → 下载 download → AI 分类 classify → 验证 verify → 翻译 translate → 阅读 read
 ```
 
-### Directory Structure
+### 并行处理 / Parallel Processing
 
-After downloading and classifying:
+批量下载或翻译时，使用 OpenCode 的 `task` 子 agent 并行执行。每篇论文有唯一文件名，不会冲突。/ For batch operations, dispatch parallel task subagents. Each paper has a unique filename — no conflicts.
+
+```
+task(子agent, "下载 arxiv_id=xxx")
+task(子agent, "下载 arxiv_id=yyy")
+task(子agent, "下载 arxiv_id=zzz")
+```
+
+### 目录结构 / Library Structure
 
 ```
 your-library/
 ├── cs.AI/
 │   └── marl/
 │       ├── Paper_Title__2301.xxxxx.pdf
-│       ├── Paper_Title__2301.xxxxx.md      # bilingual summary + notes
+│       ├── Paper_Title__2301.xxxxx.md      # 双语摘要 + 笔记
 │       └── Paper_Title__2301.xxxxx.meta.json
 ├── cs.CV/
 │   └── vision-transformer/
@@ -103,9 +118,9 @@ your-library/
     └── transformer/
 ```
 
-## Bilingual Abstracts
+## 双语摘要 / Bilingual Abstracts
 
-Each downloaded paper gets a `.md` file with both English and Chinese abstracts:
+每篇论文的 `.md` 文件包含中英文双语摘要：/ Each `.md` file has both English and Chinese abstracts:
 
 ```markdown
 # Paper Title
@@ -113,25 +128,21 @@ Each downloaded paper gets a `.md` file with both English and Chinese abstracts:
 - **arXiv ID**: 2301.xxxxx
 
 ## 摘要（English）
-The paper's abstract in English...
+The paper's abstract...
 
 ## 摘要（中文）
 论文摘要的中文翻译...
 
 ## 我的笔记
-<!-- Your reading notes here -->
+<!-- 在此记录阅读笔记 -->
 ```
 
-Chinese translation is done by the AI agent (not an external API), preserving academic terminology in English.
+中文翻译由 AI Agent 完成（不调用外部翻译 API），学术术语保留英文原文。 / Chinese translation is done by the AI agent, with academic terms kept in English.
 
-## Parallel Processing
+## 零依赖 / Zero Dependencies
 
-For batch operations (downloading or translating multiple papers), dispatch parallel task subagents. Each subagent handles one paper independently — no file conflicts because each paper has a unique filename.
+不需要 `npm install`。仅使用 Node.js 内置模块（`fs`、`path`、`fetch`）。arXiv API 返回的 Atom XML 通过轻量级正则解析。 / No npm install. Uses only Node.js built-in modules. arXiv Atom XML is parsed with a lightweight regex parser.
 
-## Zero Dependencies
-
-No npm install required. Uses only Node.js built-in modules (`fs`, `path`, `fetch`). The arXiv API returns Atom XML, which is parsed with a lightweight regex-based parser.
-
-## License
+## 许可证 / License
 
 MIT
